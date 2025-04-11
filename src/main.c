@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/11 19:09:58 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/11 19:22:11 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ t_philosopher   *init_philo(int arg0, char **args)
         philos->rules = rules;
         i++;
     }
+    //sdfsdfsdsdsd
     return (philos);
 }
 
