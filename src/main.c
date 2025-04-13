@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/11 19:22:11 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:06:40 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,14 @@ t_rules *read_input(int arg0, char **args)
     rules = malloc(sizeof(t_rules));
     if (!rules || !time)
         return (NULL);
-    i = 0;
-    while (++i < arg0)
+    i = 1;
+    while (i < arg0 )
     {
         if (check_number(args[i]) == 1)
-            time[i] = atoi(args[i]);
+            time[i - 1] = atoi(args[i]);
         else
             return (free(time), free(rules), NULL);
+        i++;
     }
     rules->number_of_philosophers = time[0];
     rules->time_to_die = time[1];
@@ -86,16 +87,16 @@ t_philosopher   *init_philo(int arg0, char **args)
     if (!rules)
         return (philos);
     rules = read_input(arg0, args);
+    printf("%d\n", rules->time_to_sleep);
     philos = malloc(sizeof(t_philosopher) * rules->number_of_philosophers);
     if (!philos)
         return (philos);
     while (i < rules->number_of_philosophers)
     {
-        philos->id = i;
-        philos->rules = rules;
-        i++;
+        philos[i].id = i++;
+        printf("%d\n", philos[i].id);
+        philos[i].rules = rules;
     }
-    //sdfsdfsdsdsd
     return (philos);
 }
 
@@ -104,7 +105,7 @@ int main(int arg0, char **args)
     t_philosopher   *philos;
 
     philos = init_philo(arg0, args);
-    printf("Hello, I'am philosopher number %d \n", philos[2].id);
+    printf("Hello, I'am philosopher number %d \n", philos[4].id + 1);
     /*
     t_philosopher *p1;
     t_philosopher *p2;
