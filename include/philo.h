@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 12:41:23 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/11 15:16:35 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/15 18:13:09 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ typedef struct rules
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	number_of_times_each_philosopher_must_eat;
+	struct timeval start;
+	int	*forks;
 } t_rules;
 
 typedef struct philosopher 
 {
 	int	id;
-    int	lfork;
-	int	rfork;
+	int	*fork;
 	int eat;
 	int wait;
-	struct timeval start;
 	struct timeval end;
 	pthread_t philo;
 	t_rules	*rules;
