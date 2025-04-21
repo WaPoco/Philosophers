@@ -6,24 +6,49 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/17 18:13:22 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/20 21:20:47 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+/*
 int mails = 0;
 pthread_mutex_t mutex;
+*/
 
 void *routine(void *arg)
 {
-    int             i;
     t_philosopher   *p;
-    int             d;
 
-    i = 0;
-    d = 0;
     p = (t_philosopher *)arg;
+    if (p->id % 2 == 0)
+    {
+        pthread_mutex_lock(p->rfork);
+        printf("Philo %d  picked up the right fork\n", p->id);
+        pthread_mutex_lock(p->lfork);
+        printf("Philo %d  picked up the left fork\n", p->id);
+    }
+    else
+    {
+        pthread_mutex_lock(p->lfork);
+        pthread_mutex_lock(p->rfork);
+    }
+    sleep(3);
+    pthread_mutex_unlock(p->rfork);
+    pthread_mutex_unlock(p->lfork);
+    printf("Philo %d  has droped the forks\n", p->id);
+    /*
+    while (1)
+    {
+        sleep(1);
+        gettimeofday(&p->rules->time_to_eat, NULL);
+        time = philos[1].end.tv_sec - philos[1].rules->start.tv_sec;
+        printf("time %d \n", time);
+        if (philos[1].rules->time_to_die == time)
+            break ;
+    }
+    
     while (i < p->rules->number_of_philosophers)
     {
         while (d < 2)
@@ -50,7 +75,7 @@ void *routine(void *arg)
             pthread_mutex_unlock(&mutex);
         }
         i++;
-    }
+    }*/
 /*    while (i++ < 10)
     {
         pthread_mutex_lock(&mutex);
@@ -102,7 +127,6 @@ t_rules *read_input(int arg0, char **args)
     rules->time_to_sleep = time[3];
     rules->number_of_times_each_philosopher_must_eat = time[4];
     free(time);
-    memset(&rules->forks, 0, sizeof(int) * rules->number_of_philosophers);
     return (rules);
 }
 
@@ -161,7 +185,7 @@ int main(int arg0, char **args)
     gettimeofday(&philos[1].end, NULL);
     pthread_join(philos[1].philo, NULL);
     printf("Time of Philo 1 %ld seconds\n", (philos[1].end.tv_sec - philos[1].rules->start.tv_sec));
-    printf("%d \n", mails);
+    //printf("%d \n", mails);
     /*
     t_philosopher *p1;
     t_philosopher *p2;
