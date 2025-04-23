@@ -6,31 +6,77 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/11 19:09:58 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:17:55 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int mails = 0;
-pthread_mutex_t mutex;
-
-void *thread_function(void *arg)
+void    sleep_time(t_philosopher *p)
 {
-    int             i;
-    t_philosopher *p;
+    pthread_mutex_lock(p->rules->print);
+    gettimeofday(&p->end, NULL);
+    printf("%ld %d is sleeping\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    pthread_mutex_unlock(p->rules->print);
+    usleep(p->rules->time_to_sleep);
+}
 
-    i = 0;
-    p = (t_philosopher *)arg;
-    gettimeofday(&p->start, NULL);
-    while (i++ < 1000000)
+void    eat(t_philosopher *p)
+{
+    pthread_mutex_lock(p->rules->print);
+    gettimeofday(&p->end, NULL);
+    printf("%ld %d is eating\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    pthread_mutex_unlock(p->rules->print);
+    usleep(p->rules->time_to_eat);
+    pthread_mutex_unlock(p->rfork);
+    pthread_mutex_unlock(p->lfork);
+    pthread_mutex_lock(p->rules->meals);
+    p->rules->number_of_times_each_philosopher_must_eat--;
+    pthread_mutex_unlock(p->rules->meals);  
+    if (p->rules->number_of_times_each_philosopher_must_eat == 0)
     {
-        pthread_mutex_lock(&mutex);
-        mails++;
-        pthread_mutex_unlock(&mutex);
+        printf("Enough food! \n");
+        exit(1);
+    }
+}
+
+void    grap_fork(t_philosopher *p, pthread_mutex_t *fork)
+{
+    pthread_mutex_lock(fork);
+    pthread_mutex_lock(p->rules->print);
+    gettimeofday(&p->end, NULL);
+    printf("%ld %d has taken a fork\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    pthread_mutex_unlock(p->rules->print);
+}
+
+void    grap_forks(t_philosopher *p)
+{
+    if (p->id % 2 == 0)
+    {
+        grap_fork(p, p->rfork);
+        grap_fork(p, p->lfork);
+    }
+    else
+    {
+        grap_fork(p, p->lfork);      
+        grap_fork(p, p->rfork);
+    }
+}
+
+void *routine(void *arg)
+{
+    t_philosopher   *p;
+
+    p = (t_philosopher *)arg;
+    while (1)
+    {
+        grap_forks(p);
+        eat(p);
+        sleep_time(p);
     }
     return (NULL);
 }
+
 int check_number(char *arg)
 {
     int i;
@@ -49,27 +95,30 @@ int check_number(char *arg)
 
 t_rules *read_input(int arg0, char **args)
 {
-    int i;
-    int *time;
+    int     i;
+    int     *time;
     t_rules *rules;
 
     time = malloc((arg0 - 1) * sizeof(int));
     rules = malloc(sizeof(t_rules));
+    rules->number_of_times_each_philosopher_must_eat = 1;
     if (!rules || !time)
         return (NULL);
-    i = 0;
-    while (++i < arg0)
+    i = 1;
+    while (i < arg0)
     {
         if (check_number(args[i]) == 1)
-            time[i] = atoi(args[i]);
+            time[i - 1] = atoi(args[i]);
         else
             return (free(time), free(rules), NULL);
+        i++;
     }
     rules->number_of_philosophers = time[0];
     rules->time_to_die = time[1];
     rules->time_to_eat = time[2];
     rules->time_to_sleep = time[3];
-    rules->number_of_times_each_philosopher_must_eat = time[4];
+    rules->number_of_times_each_philosopher_must_eat = time[4] * time[0];
+    rules->forks = malloc(sizeof(pthread_mutex_t) * time[0]);
     free(time);
     return (rules);
 }
@@ -78,21 +127,38 @@ t_philosopher   *init_philo(int arg0, char **args)
 {
     t_philosopher   *philos;
     t_rules         *rules;
-    int             *input_philo;
     int             i;
 
     i = 0;
     rules = malloc(sizeof(t_rules));
     if (!rules)
+    {
+        printf("Error!");
         return (philos);
+    }
     rules = read_input(arg0, args);
     philos = malloc(sizeof(t_philosopher) * rules->number_of_philosophers);
     if (!philos)
         return (philos);
+    rules->meals = malloc(sizeof(pthread_mutex_t));
+    rules->print = malloc(sizeof(pthread_mutex_t));
+    gettimeofday(&rules->start, NULL);
     while (i < rules->number_of_philosophers)
     {
-        philos->id = i;
-        philos->rules = rules;
+        gettimeofday(&philos[i].start, NULL);
+        philos[i].id = i;
+        philos[i].rules = rules;
+        if (i == 0)
+        {
+            philos[i].lfork = &philos->rules->forks[rules->number_of_philosophers - 1];
+            philos[i].rfork = &philos->rules->forks[0];
+        }
+        else
+        {
+            philos[i].lfork = &philos->rules->forks[i - 1];
+            philos[i].rfork = &philos->rules->forks[i % rules->number_of_philosophers];                 
+        }
+        pthread_create(&philos[i].philo, NULL, routine, (void *) &philos[i]);
         i++;
     }
     return (philos);
@@ -101,29 +167,16 @@ t_philosopher   *init_philo(int arg0, char **args)
 int main(int arg0, char **args)
 {
     t_philosopher   *philos;
+    int             time;
 
-    philos = init_philo(arg0, args);
-    printf("Hello, I'am philosopher number %d \n", philos[2].id);
-    /*
-    t_philosopher *p1;
-    t_philosopher *p2;
-
-    pthread_mutex_init(&mutex, NULL);
-    // Create the thread
-    p1 = malloc(sizeof(t_philosopher));
-    p2 = malloc(sizeof(t_philosopher));
-    pthread_create(&p1->philo, NULL, thread_function, (void *)p1);
-    pthread_create(&p2->philo, NULL, thread_function, (void *)p2);
-    pthread_join(p1->philo, NULL);
-    sleep(3);
-    gettimeofday(&p1->end, NULL);
-    pthread_join(p2->philo, NULL);
-    sleep(3);
-    gettimeofday(&p2->end, NULL);
-    printf("mails: %d\n", mails);
-    printf("Time of Philo 1 %ld\n", p1->end.tv_sec - p1->start.tv_sec);
-    printf("Time of Philo 2 %ld\n", p2->end.tv_sec - p2->start.tv_sec);
-    pthread_mutex_destroy(&mutex);
-    */
+    time = 0;
+    if (arg0 == 5 || arg0 == 6)
+        philos = init_philo(arg0, args);
+    else
+    {
+        printf("Error arguments");   
+        return (1);
+    }
+    sleep(30);
     return (0);
 }
