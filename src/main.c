@@ -6,11 +6,19 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/23 18:17:55 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:05:24 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+void    thinking(t_philosopher *p)
+{
+    pthread_mutex_lock(p->rules->print);
+    gettimeofday(&p->end, NULL);
+    printf("%ld %d is thinking\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    pthread_mutex_unlock(p->rules->print);
+}
 
 void    sleep_time(t_philosopher *p)
 {
@@ -18,18 +26,20 @@ void    sleep_time(t_philosopher *p)
     gettimeofday(&p->end, NULL);
     printf("%ld %d is sleeping\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
     pthread_mutex_unlock(p->rules->print);
-    usleep(p->rules->time_to_sleep);
+    sleep(p->rules->time_to_sleep / 1000);
 }
 
 void    eat(t_philosopher *p)
 {
     pthread_mutex_lock(p->rules->print);
     gettimeofday(&p->end, NULL);
+    *p->eats = 1;
     printf("%ld %d is eating\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
     pthread_mutex_unlock(p->rules->print);
-    usleep(p->rules->time_to_eat);
+    sleep(p->rules->time_to_eat / 1000);
     pthread_mutex_unlock(p->rfork);
     pthread_mutex_unlock(p->lfork);
+    *p->eats = 0;
     pthread_mutex_lock(p->rules->meals);
     p->rules->number_of_times_each_philosopher_must_eat--;
     pthread_mutex_unlock(p->rules->meals);  
@@ -70,11 +80,33 @@ void *routine(void *arg)
     p = (t_philosopher *)arg;
     while (1)
     {
+        thinking(p);
         grap_forks(p);
         eat(p);
         sleep_time(p);
     }
     return (NULL);
+}
+
+void    *monitore(void *arg)
+{
+    t_philosopher   *p;
+
+    p = (t_philosopher *)arg;
+    while (*p->eats == 0)
+    {
+        sleep(1);
+        if (/.../)
+        {
+            /*
+            I have to add for each philo a clock maybe with a variable t_i
+            that increases with each second and if it reaches time_to_die then stop
+            */
+        }
+        while (*p->eats == 1)
+            sleep(1);
+    }
+    return (NULL);   
 }
 
 int check_number(char *arg)
@@ -148,6 +180,8 @@ t_philosopher   *init_philo(int arg0, char **args)
         gettimeofday(&philos[i].start, NULL);
         philos[i].id = i;
         philos[i].rules = rules;
+        philos[i].eats = malloc(sizeof(int));
+        *philos[i].eats = 0;
         if (i == 0)
         {
             philos[i].lfork = &philos->rules->forks[rules->number_of_philosophers - 1];
@@ -156,9 +190,10 @@ t_philosopher   *init_philo(int arg0, char **args)
         else
         {
             philos[i].lfork = &philos->rules->forks[i - 1];
-            philos[i].rfork = &philos->rules->forks[i % rules->number_of_philosophers];                 
+            philos[i].rfork = &philos->rules->forks[i % rules->number_of_philosophers];
         }
         pthread_create(&philos[i].philo, NULL, routine, (void *) &philos[i]);
+        pthread_create(&philos[i].philo_time, NULL, monitore, (void *) &philos[i]);
         i++;
     }
     return (philos);
@@ -177,6 +212,6 @@ int main(int arg0, char **args)
         printf("Error arguments");   
         return (1);
     }
-    sleep(30);
+    sleep(300);
     return (0);
 }
