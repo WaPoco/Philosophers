@@ -4,11 +4,10 @@ This project is about the concept of parallel threading. So we have n philoshers
 The key to solving the Dining Philosophers so that no one starves is to ensure two properties simultaneously:
 
 -No deadlock (every system of requests eventually makes progress)
+
 -No starvation (every philosopher who wants to eat eventually gets to eat)
 
 Below are three classic strategies—each avoids deadlock, and with a small tweak can also guarantee no one waits forever.  
-
-1. Resource‐Hierarchy (Numbering) Strategy
 
 Number the spoons from 0 through n–1 (in a circle).
 Always pick up the lower‐numbered spoon first, then the higher‐numbered one.
