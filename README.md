@@ -1,6 +1,8 @@
 Philosophers problem
+
 This project is about the concept of parallel threading. So we have n philoshers and spoons located around a table. Each philosopher wants to eat and has to use on both hands spoons in order to eat. How should we time the order to avoid starvation?
 The key to solving the Dining Philosophers so that no one starves is to ensure two properties simultaneously:
+
 -No deadlock (every system of requests eventually makes progress)
 -No starvation (every philosopher who wants to eat eventually gets to eat)
 
