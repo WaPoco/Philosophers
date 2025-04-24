@@ -13,3 +13,5 @@ Number the spoons from 0 through n–1 (in a circle).
 Always pick up the lower‐numbered spoon first, then the higher‐numbered one.
 Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the left.
 If i < (i+1)%n he grabs spoon i first; otherwise he grabs spoon (i+1)%n first.
+
+...
