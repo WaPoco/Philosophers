@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/24 17:05:24 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/25 17:59:19 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void    thinking(t_philosopher *p)
 {
     pthread_mutex_lock(p->rules->print);
     gettimeofday(&p->end, NULL);
-    printf("%ld %d is thinking\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    printf("%f %d is thinking\n", (p->end.tv_sec - p->rules->start.tv_sec) + ((p->end.tv_usec - p->rules->start.tv_usec) / 1000000.0), p->id);
     pthread_mutex_unlock(p->rules->print);
 }
 
@@ -24,9 +24,9 @@ void    sleep_time(t_philosopher *p)
 {
     pthread_mutex_lock(p->rules->print);
     gettimeofday(&p->end, NULL);
-    printf("%ld %d is sleeping\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    printf("%f %d is sleeping\n", (p->end.tv_sec - p->rules->start.tv_sec) + ((p->end.tv_usec - p->rules->start.tv_usec) / 1000000.0), p->id);
     pthread_mutex_unlock(p->rules->print);
-    sleep(p->rules->time_to_sleep / 1000);
+    usleep(p->rules->time_to_sleep / 1000);
 }
 
 void    eat(t_philosopher *p)
@@ -34,9 +34,9 @@ void    eat(t_philosopher *p)
     pthread_mutex_lock(p->rules->print);
     gettimeofday(&p->end, NULL);
     *p->eats = 1;
-    printf("%ld %d is eating\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    printf("%f %d is eating\n", (p->end.tv_sec - p->rules->start.tv_sec) + ((p->end.tv_usec - p->rules->start.tv_usec) / 1000000.0), p->id);
     pthread_mutex_unlock(p->rules->print);
-    sleep(p->rules->time_to_eat / 1000);
+    usleep(p->rules->time_to_eat / 1000);
     pthread_mutex_unlock(p->rfork);
     pthread_mutex_unlock(p->lfork);
     *p->eats = 0;
@@ -55,7 +55,7 @@ void    grap_fork(t_philosopher *p, pthread_mutex_t *fork)
     pthread_mutex_lock(fork);
     pthread_mutex_lock(p->rules->print);
     gettimeofday(&p->end, NULL);
-    printf("%ld %d has taken a fork\n", (p->end.tv_sec - p->rules->start.tv_sec) * 1000, p->id);
+    printf("%f %d has taken a fork\n", (p->end.tv_sec - p->rules->start.tv_sec) + ((p->end.tv_usec - p->rules->start.tv_usec) / 1000000.0), p->id);
     pthread_mutex_unlock(p->rules->print);
 }
 
@@ -95,16 +95,22 @@ void    *monitore(void *arg)
     p = (t_philosopher *)arg;
     while (*p->eats == 0)
     {
-        sleep(1);
-        if (/.../)
+        usleep(10000);
+        *p->t += 10;
+        if (*p->t == p->rules->time_to_die)
         {
-            /*
-            I have to add for each philo a clock maybe with a variable t_i
-            that increases with each second and if it reaches time_to_die then stop
-            */
+            usleep(10000);
+            gettimeofday(&p->end, NULL);
+            pthread_mutex_lock(p->rules->print);
+            printf("%f %d died \n", (p->end.tv_sec - p->rules->start.tv_sec) + ((p->end.tv_usec - p->rules->start.tv_usec) / 1000000.0), p->id);
+            pthread_mutex_unlock(p->rules->print);
+            exit(1);
         }
         while (*p->eats == 1)
-            sleep(1);
+        {
+            usleep(10000);
+            *p->t = 0;
+        }
     }
     return (NULL);   
 }
@@ -181,7 +187,9 @@ t_philosopher   *init_philo(int arg0, char **args)
         philos[i].id = i;
         philos[i].rules = rules;
         philos[i].eats = malloc(sizeof(int));
+        philos[i].t = malloc(sizeof(int));
         *philos[i].eats = 0;
+        *philos[i].t = 0;
         if (i == 0)
         {
             philos[i].lfork = &philos->rules->forks[rules->number_of_philosophers - 1];
@@ -192,8 +200,8 @@ t_philosopher   *init_philo(int arg0, char **args)
             philos[i].lfork = &philos->rules->forks[i - 1];
             philos[i].rfork = &philos->rules->forks[i % rules->number_of_philosophers];
         }
-        pthread_create(&philos[i].philo, NULL, routine, (void *) &philos[i]);
-        pthread_create(&philos[i].philo_time, NULL, monitore, (void *) &philos[i]);
+            pthread_create(&philos[i].philo, NULL, routine, (void *) &philos[i]);
+            pthread_create(&philos[i].philo, NULL, monitore, (void *) &philos[i]);
         i++;
     }
     return (philos);
