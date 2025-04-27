@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 12:41:23 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/25 16:35:57 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/27 12:51:07 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ typedef struct philosopher
 	pthread_mutex_t	*rfork;
 	struct timeval start;
 	struct timeval end;
+	struct timeval last_meal;
 	pthread_t philo;
 	t_rules	*rules;
 	int	*eats;
-	int	*t;
 } t_philosopher;
