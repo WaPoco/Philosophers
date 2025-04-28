@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/04/27 16:39:16 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/04/28 18:53:52 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@ float   last_meal_time(t_philosopher *p, struct timeval end)
 {
     float   time;
     
-    gettimeofday(&end, NULL);
-    if (p->last_meal.tv_sec == 0)
-        return (0);    
-    time = (-p->last_meal.tv_sec + end.tv_sec) + ((-p->last_meal.tv_usec + end.tv_usec) / 1000000.0);
+    gettimeofday(&end, NULL);   
+    time = (end.tv_sec - p->last_meal.tv_sec) + ((end.tv_usec - p->last_meal.tv_usec) / 1000000.0);
     return (time);
 }
 
@@ -50,23 +48,21 @@ void    sleep_time(t_philosopher *p)
 void    eat(t_philosopher *p)
 {
     pthread_mutex_lock(p->rules->print);
-    //gettimeofday(&p->last_meal, NULL);
-    printf("%f %d is eating\n", cur_time(p, p->end), p->id);
+    gettimeofday(&p->last_meal, NULL);
     *p->eats = 1;
+    printf("%f %d is eating\n", cur_time(p, p->end), p->id);
     pthread_mutex_unlock(p->rules->print);
     usleep(p->rules->time_to_eat * 1000);
-    pthread_mutex_unlock(p->rfork);
-    pthread_mutex_unlock(p->lfork);
     gettimeofday(&p->last_meal, NULL);
     *p->eats = 0;
-    pthread_mutex_lock(p->rules->meals);
-    p->rules->number_of_times_each_philosopher_must_eat--;
-    pthread_mutex_unlock(p->rules->meals);  
+    pthread_mutex_unlock(p->rfork);
+    pthread_mutex_unlock(p->lfork);
+    /*
     if (p->rules->number_of_times_each_philosopher_must_eat == 0)
     {
         printf("Enough food! \n");
         exit(1);
-    }
+    }*/
 }
 
 void    grap_fork(t_philosopher *p, pthread_mutex_t *fork)
@@ -98,10 +94,10 @@ void *routine(void *arg)
     p = (t_philosopher *)arg;
     while (1)
     {
-        thinking(p);
         grap_forks(p);
         eat(p);
         sleep_time(p);
+        thinking(p);
     }
     return (NULL);
 }
@@ -113,7 +109,7 @@ void    *monitore(void *arg)
     p = (t_philosopher *)arg;
     while (*p->eats == 0)
     {
-        if (*p->eats == 0 && (int) (last_meal_time(p, p->end) * 1000) == p->rules->time_to_die)
+        if ((int) (last_meal_time(p, p->end) * 1000) >= p->rules->time_to_die)
         {
             printf("%f \n", last_meal_time(p, p->end) * 1000);
             usleep(10000);
@@ -121,6 +117,10 @@ void    *monitore(void *arg)
             printf("%f %d died \n", cur_time(p, p->end), p->id);
             pthread_mutex_unlock(p->rules->print);
             exit(1);
+        }
+        if (*p->eats == 1)
+        {
+            
         }
         while (*p->eats == 1)
             usleep(1000);
@@ -196,10 +196,10 @@ t_philosopher   *init_philo(int arg0, char **args)
     rules->meals = malloc(sizeof(pthread_mutex_t));
     rules->print = malloc(sizeof(pthread_mutex_t));
     gettimeofday(&rules->start, NULL);
-    gettimeofday(&philos[i].last_meal, NULL);
     while (i < rules->number_of_philosophers)
     {
         gettimeofday(&philos[i].start, NULL);
+        philos[i].last_meal = rules->start;
         philos[i].id = i;
         philos[i].rules = rules;
         philos[i].eats = malloc(sizeof(int));
