@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/04 10:17:49 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/04 17:08:20 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	ft_usleep(int milliseconds)
 
 	start = get_current_time();
 	while ((get_current_time() - start) < milliseconds)
-		usleep(100);
+		usleep(500);
 	return (0);
 }
 
@@ -63,16 +63,34 @@ void sleep_time(t_philosopher *p)
     ft_usleep(p->rules->time_to_sleep);
 }
 
+int    check_and_simulation(t_philosopher *p)
+{
+    int i;
+    int sum;
+
+    i = 0;
+    sum = 0;
+    while (i < p->rules->number_of_philosophers)
+    {
+        if (p->rules->each_philosopher_has_eaten[i] >= p->rules->number_of_times_each_philosopher_must_eat)
+            sum += 1;
+        i++;
+    }
+    if (sum == p->rules->number_of_philosophers)
+        return (0);
+    return (1);
+}
+
 void eat(t_philosopher *p)
 {
     pthread_mutex_lock(p->meals);
     *p->eats = 1;
     gettimeofday(&p->last_meal, NULL);
+    p->rules->each_philosopher_has_eaten[p->id]++;
     pthread_mutex_unlock(p->meals);
-
     pthread_mutex_lock(p->rules->print);
     //printf("%d %d is eating and last meal %d and eats=%d\n", cur_time(p), p->id, last_meal_time(p), *p->eats);
-    printf("%d %d is eating\n", cur_time(p), p->id);
+    printf("%d %d is eating meals=%d\n", cur_time(p), p->id, p->rules->each_philosopher_has_eaten[p->id]);
     pthread_mutex_unlock(p->rules->print);
 
     ft_usleep(p->rules->time_to_eat);
@@ -131,6 +149,10 @@ void *monitore(void *arg)
             pthread_mutex_lock(p->rules->print);
             printf("%d %d died\n", cur_time(p), p->id);
             pthread_mutex_unlock(p->rules->print);
+            exit(1) ;
+        }
+        if ((*p->eats == 1) && !check_and_simulation(p))
+        {
             exit(1);
         }
     }
@@ -177,7 +199,7 @@ t_rules *read_input(int arg0, char **args)
     rules->time_to_die = time[1];
     rules->time_to_eat = time[2];
     rules->time_to_sleep = time[3];
-    rules->number_of_times_each_philosopher_must_eat = time[4] * time[0];
+    rules->number_of_times_each_philosopher_must_eat = time[4];
     rules->forks = malloc(sizeof(pthread_mutex_t) * time[0]);
     free(time);
     return (rules);
@@ -203,6 +225,15 @@ t_philosopher *init_philo(int arg0, char **args)
 
     i = 0;
     rules = read_input(arg0, args);
+    rules->each_philosopher_has_eaten = malloc(sizeof(int) * rules->number_of_philosophers);
+    rules->each_philosopher_has_eaten[0] = 0;
+    rules->each_philosopher_has_eaten[1] = 0;
+    rules->each_philosopher_has_eaten[2] = 0;
+    rules->each_philosopher_has_eaten[3] = 0;
+    rules->each_philosopher_has_eaten[4] = 0;
+    rules->each_philosopher_has_eaten[5] = 0;
+    rules->each_philosopher_has_eaten[6] = 0;
+    rules->each_philosopher_has_eaten[7] = 0;
     if (!rules)
     {
         printf("Error!");
@@ -214,11 +245,12 @@ t_philosopher *init_philo(int arg0, char **args)
         return (philos);
     philos_monitor = malloc(sizeof(pthread_t) * rules->number_of_philosophers);
     rules->print = malloc(sizeof(pthread_mutex_t));
+    rules->dead_lock = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(rules->print, NULL);
+    pthread_mutex_init(rules->dead_lock, NULL);
     gettimeofday(&rules->start, NULL);
     while (i < rules->number_of_philosophers)
     {
-        gettimeofday(&philos[i].start, NULL);
         philos[i].last_meal = rules->start;
         philos[i].id = i;
         philos[i].rules = rules;
