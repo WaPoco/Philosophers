@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/04 17:08:20 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:18:26 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ int    check_and_simulation(t_philosopher *p)
 
     i = 0;
     sum = 0;
+    if (p->rules->number_of_times_each_philosopher_must_eat == 0)
+        return (1);
     while (i < p->rules->number_of_philosophers)
     {
         if (p->rules->each_philosopher_has_eaten[i] >= p->rules->number_of_times_each_philosopher_must_eat)
@@ -125,9 +127,8 @@ void *routine(void *arg)
     p = (t_philosopher *)arg;
     if (p->id % 2 == 0)
         ft_usleep(200);
-
     thinking(p);
-    while (1)
+    while (!p->dead)
     {
         grap_forks(p);
         eat(p);
@@ -148,12 +149,15 @@ void *monitore(void *arg)
         {
             pthread_mutex_lock(p->rules->print);
             printf("%d %d died\n", cur_time(p), p->id);
-            pthread_mutex_unlock(p->rules->print);
-            exit(1) ;
+			*p->dead = 1;
+            break ;
         }
-        if ((*p->eats == 1) && !check_and_simulation(p))
+        if (!check_and_simulation(p))
         {
-            exit(1);
+            pthread_mutex_lock(p->rules->print);
+            printf("%d %d stop simulation\n", cur_time(p), p->id);
+			*p->dead = 1;
+            break ;
         }
     }
     return (NULL);
@@ -175,15 +179,15 @@ int check_number(char *arg)
     return (1);
 }
 
-t_rules *read_input(int arg0, char **args)
+t_rules	*read_input(int arg0, char **args)
 {
-    int i;
-    int *time;
-    t_rules *rules;
-
-    time = malloc((arg0 - 1) * sizeof(int));
+	int	i;
+	int		*time;
+	t_rules	*rules;
+	
+	time = malloc((arg0 - 1) * sizeof(int));
     rules = malloc(sizeof(t_rules));
-    rules->number_of_times_each_philosopher_must_eat = 1;
+    rules->number_of_times_each_philosopher_must_eat = 0;
     if (!rules || !time)
         return (NULL);
     i = 1;
@@ -201,9 +205,9 @@ t_rules *read_input(int arg0, char **args)
     rules->time_to_sleep = time[3];
     rules->number_of_times_each_philosopher_must_eat = time[4];
     rules->forks = malloc(sizeof(pthread_mutex_t) * time[0]);
-    free(time);
-    return (rules);
+    return (free(time), rules);
 }
+
 void	init_forks(pthread_mutex_t *forks, int philo_num)
 {
 	int	i;
@@ -225,15 +229,9 @@ t_philosopher *init_philo(int arg0, char **args)
 
     i = 0;
     rules = read_input(arg0, args);
-    rules->each_philosopher_has_eaten = malloc(sizeof(int) * rules->number_of_philosophers);
-    rules->each_philosopher_has_eaten[0] = 0;
-    rules->each_philosopher_has_eaten[1] = 0;
-    rules->each_philosopher_has_eaten[2] = 0;
-    rules->each_philosopher_has_eaten[3] = 0;
-    rules->each_philosopher_has_eaten[4] = 0;
-    rules->each_philosopher_has_eaten[5] = 0;
-    rules->each_philosopher_has_eaten[6] = 0;
-    rules->each_philosopher_has_eaten[7] = 0;
+    if (!rules)
+        return (NULL); 
+    memset(rules->each_philosopher_has_eaten, 0, sizeof(int) * rules->number_of_philosophers);
     if (!rules)
     {
         printf("Error!");
@@ -258,10 +256,19 @@ t_philosopher *init_philo(int arg0, char **args)
         philos[i].meals = malloc(sizeof(pthread_mutex_t));
         pthread_mutex_init(philos[i].meals, NULL);
         *philos[i].eats = 0;
+		philos[i].dead = malloc(sizeof(sizeof(int)));
+		*philos[i].dead = 0;
         philos[i].lfork = &rules->forks[i];
         philos[i].rfork = &rules->forks[(i + rules->number_of_philosophers - 1) % rules->number_of_philosophers];        
         pthread_create(&philos_monitor[i], NULL, monitore, (void *)&philos[i]);
         pthread_create(&philos[i].philo, NULL, routine, (void *)&philos[i]);
+        i++;
+    }
+    i = 0;
+    while (i < rules->number_of_philosophers)
+    {  
+        if (pthread_join(philos_monitor[i], NULL) != 0)
+        if (pthread_join(philos[i].philo, NULL) != 0)    
         i++;
     }
     return (philos);
@@ -278,6 +285,5 @@ int main(int arg0, char **args)
         printf("Error arguments");
         return (1);
     }
-    sleep(3000);
     return (0);
 }

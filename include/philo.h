@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 12:41:23 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/04 13:57:15 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:05:48 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef struct rules
 {
@@ -37,9 +38,10 @@ typedef struct philosopher
 	pthread_mutex_t	*lfork;
 	pthread_mutex_t	*rfork;
 	pthread_mutex_t	*meals;
-	struct timeval end;
-	struct timeval last_meal;
-	pthread_t philo;
-	t_rules	*rules;
-	int	*eats;
+	struct timeval	end;
+	struct timeval	last_meal;
+	pthread_t 		philo;
+	t_rules			*rules;
+	int				*eats;
+	int				*dead;
 } t_philosopher;
