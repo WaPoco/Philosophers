@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 12:41:23 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/04 13:57:15 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:58:38 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef struct rules
 {
@@ -43,3 +44,35 @@ typedef struct philosopher
 	t_rules	*rules;
 	int	*eats;
 } t_philosopher;
+
+
+
+// time 
+int last_meal_time(t_philosopher *p);
+int	get_current_time(void);
+int cur_time(t_philosopher *p);
+int	ft_usleep(int milliseconds);
+
+// routine 
+void thinking(t_philosopher *p);
+void sleep_time(t_philosopher *p);
+void eat(t_philosopher *p);
+void grap_fork(t_philosopher *p, pthread_mutex_t *fork);
+void grap_forks(t_philosopher *p);
+void *routine(void *arg);
+
+// monitore 
+int    check_and_simulation(t_philosopher *p);
+void *monitore(void *arg);
+
+// check and read input
+t_rules *read_input(int arg0, char **args);
+int check_number(char *arg);
+
+// init philos
+void	init_forks(pthread_mutex_t *forks, int philo_num);
+t_philosopher *init_philo(int arg0, char **args);
+
+
+
+
