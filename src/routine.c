@@ -6,42 +6,52 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 19:50:08 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/06 19:50:14 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:04:47 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+int    atleat_one_dead(t_philosopher *p)
+{
+    pthread_mutex_lock(p->rules->dead_lock);
+    if (*p->rules->dead == 1)
+        return (pthread_mutex_unlock(p->rules->dead_lock), 1);
+    pthread_mutex_unlock(p->rules->dead_lock);
+    return (0);
+}
+
+void    print_message(t_philosopher *p, char *text)
+{
+    if (!atleat_one_dead(p))
+    {
+        pthread_mutex_lock(p->rules->print);
+        printf("%d %d %s \n", cur_time(p), p->id, text);
+        pthread_mutex_unlock(p->rules->print);
+    }
+}
+
 void thinking(t_philosopher *p)
 {
-    pthread_mutex_lock(p->rules->print);
-    //printf("%d %d is thinking and last meal %d and eats=%d\n", cur_time(p), p->id, last_meal_time(p), *p->eats);
-    printf("%d %d is thinking \n", cur_time(p), p->id);
-    pthread_mutex_unlock(p->rules->print);
+    print_message(p, "is thinking");
 }
 
 void sleep_time(t_philosopher *p)
 {
-    pthread_mutex_lock(p->rules->print);
-    //printf("%d %d is sleeping and last meal %d and eats=%d\n", cur_time(p), p->id, last_meal_time(p), *p->eats);
-    printf("%d %d is sleeping\n", cur_time(p), p->id);
-    pthread_mutex_unlock(p->rules->print);
-    ft_usleep(p->rules->time_to_sleep);
+    print_message(p, "is sleeping");
+    ft_usleep(p, p->rules->time_to_sleep);
 }
 
 void eat(t_philosopher *p)
-{
+{    
+    print_message(p, "is eating");
     pthread_mutex_lock(p->meals);
     *p->eats = 1;
     gettimeofday(&p->last_meal, NULL);
     p->rules->each_philosopher_has_eaten[p->id]++;
     pthread_mutex_unlock(p->meals);
-    pthread_mutex_lock(p->rules->print);
-    //printf("%d %d is eating and last meal %d and eats=%d\n", cur_time(p), p->id, last_meal_time(p), *p->eats);
-    printf("%d %d is eating meals=%d\n", cur_time(p), p->id, p->rules->each_philosopher_has_eaten[p->id]);
-    pthread_mutex_unlock(p->rules->print);
-
-    ft_usleep(p->rules->time_to_eat);
+    
+    ft_usleep(p, p->rules->time_to_eat);
 
     pthread_mutex_unlock(p->rfork);
     pthread_mutex_unlock(p->lfork);
@@ -54,10 +64,7 @@ void eat(t_philosopher *p)
 void grap_fork(t_philosopher *p, pthread_mutex_t *fork)
 {
     pthread_mutex_lock(fork);
-    pthread_mutex_lock(p->rules->print);
-    //printf("%d %d has taken a fork and last meal %d and eats=%d \n", cur_time(p), p->id, last_meal_time(p), *p->eats);
-    printf("%d %d has taken a fork\n", cur_time(p), p->id);
-    pthread_mutex_unlock(p->rules->print);
+    print_message(p, "has taken a fork");
 }
 
 void grap_forks(t_philosopher *p)
@@ -72,10 +79,9 @@ void *routine(void *arg)
 
     p = (t_philosopher *)arg;
     if (p->id % 2 == 0)
-        ft_usleep(10);
-
+        ft_usleep(p, 10);
     thinking(p);
-    while (1)
+    while (!atleat_one_dead(p))
     {
         grap_forks(p);
         eat(p);

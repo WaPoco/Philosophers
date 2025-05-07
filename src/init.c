@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 19:51:17 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/06 19:58:42 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:55:36 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,18 @@ t_philosopher *init_philo(int arg0, char **args)
         printf("Error!");
         return (philos);
     }
+    rules->dead = malloc(sizeof(int));
+    *rules->dead = 0;
     init_forks(rules->forks, rules->number_of_philosophers);
     philos = malloc(sizeof(t_philosopher) * rules->number_of_philosophers);
     if (!philos)
         return (philos);
     philos_monitor = malloc(sizeof(pthread_t) * rules->number_of_philosophers);
     rules->print = malloc(sizeof(pthread_mutex_t));
-    rules->dead_lock = malloc(sizeof(pthread_mutex_t));
     pthread_mutex_init(rules->print, NULL);
-    pthread_mutex_init(rules->dead_lock, NULL);
     gettimeofday(&rules->start, NULL);
+    rules->dead_lock = malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(rules->dead_lock, NULL);
     while (i < rules->number_of_philosophers)
     {
         philos[i].last_meal = rules->start;
@@ -63,6 +65,13 @@ t_philosopher *init_philo(int arg0, char **args)
         philos[i].rfork = &rules->forks[(i + rules->number_of_philosophers - 1) % rules->number_of_philosophers];        
         pthread_create(&philos_monitor[i], NULL, monitore, (void *)&philos[i]);
         pthread_create(&philos[i].philo, NULL, routine, (void *)&philos[i]);
+        i++;
+    }
+    i = 0;
+    while (i < rules->number_of_philosophers)
+    {
+        pthread_join(philos_monitor[i], NULL);
+        pthread_join(philos[i].philo, NULL);
         i++;
     }
     return (philos);

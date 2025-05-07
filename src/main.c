@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/06 20:00:44 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:01:37 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,5 @@ int main(int arg0, char **args)
         printf("Error arguments");
         return (1);
     }
-    sleep(3000);
     return (0);
 }

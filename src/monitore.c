@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 19:49:46 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/06 19:51:52 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:06:59 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int    check_and_simulation(t_philosopher *p)
 
     i = 0;
     sum = 0;
+    if ( p->rules->number_of_times_each_philosopher_must_eat == 0)
+        return (1);
     while (i < p->rules->number_of_philosophers)
     {
         pthread_mutex_lock(p->meals);
@@ -37,12 +39,14 @@ void *monitore(void *arg)
     t_philosopher *p;
 
     p = (t_philosopher *)arg;
-    while (1)
+    while (!atleat_one_dead(p))
     {
         if (!check_and_simulation(p))
         {
-            pthread_mutex_lock(p->rules->print);
-            exit(1) ;
+            pthread_mutex_lock(p->rules->dead_lock);
+            *p->rules->dead = 1;
+            pthread_mutex_unlock(p->rules->dead_lock);
+            break ;   
         }
         pthread_mutex_lock(p->meals);
         if ((last_meal_time(p)>= p->rules->time_to_die) && (*p->eats == 0))
@@ -51,7 +55,10 @@ void *monitore(void *arg)
             pthread_mutex_lock(p->rules->print);
             printf("%d %d died\n", cur_time(p), p->id);
             pthread_mutex_unlock(p->rules->print);
-            exit(1) ;
+            pthread_mutex_lock(p->rules->dead_lock);
+            *p->rules->dead = 1;
+            pthread_mutex_unlock(p->rules->dead_lock);
+            break ;
         }
        pthread_mutex_unlock(p->meals);
     }

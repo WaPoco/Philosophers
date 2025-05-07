@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 19:50:21 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/06 19:50:32 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:23:26 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ int cur_time(t_philosopher *p)
         + ((end.tv_usec - p->rules->start.tv_usec) / 1000);
 }
 
-int	ft_usleep(int milliseconds)
+int	ft_usleep(t_philosopher *p, int milliseconds)
 {
 	int	start;
 
+    if (atleat_one_dead((p)))
+        return (0);
 	start = get_current_time();
 	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
