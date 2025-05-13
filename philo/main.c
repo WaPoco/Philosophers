@@ -6,13 +6,13 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/13 12:25:29 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:42:38 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int check_number(char *arg)
+int	check_number(char *arg)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ int check_number(char *arg)
 
 t_rules	*read_input(int arg0, char **args)
 {
-	int		i;
+	int			i;
 	int			*time;
 	t_rules		*rules;
 
