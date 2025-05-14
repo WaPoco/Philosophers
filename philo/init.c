@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 19:51:17 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/13 16:41:27 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:52:48 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,23 @@ t_philosopher	*init_philo(int arg0, char **args)
 
 	rules = read_input(arg0, args);
 	if (!rules)
-	{
-		printf("Error!");
-		return (NULL);
-	}
+		return (printf("Error reading arguments!"), NULL);
 	philos = malloc(sizeof(t_philosopher) * rules->number_of_philosophers);
+	if (!philos)
+		return (free(rules), NULL);
 	philos_monitor = malloc(sizeof(pthread_t) * rules->number_of_philosophers);
-	if (!philos || !philos_monitor)
-		return (NULL);
+	if (!philos_monitor)
+		return (free(philos), free(rules), NULL);
 	if (!alloc_all(philos, philos_monitor, rules))
 		return (NULL);
 	init_forks(rules->forks, rules->number_of_philosophers);
 	init_locks(rules);
-	gettimeofday(&rules->start, NULL);
 	if (!create_threads(rules, philos, philos_monitor))
 		return (NULL);
 	if (!join_all_threads(rules, philos, philos_monitor))
 		return (NULL);
-	return (philos);
+	destroy_all(rules->number_of_philosophers, rules, philos);
+	free_philos_eats(rules->number_of_philosophers, philos);
+	free_philos_meals(rules->number_of_philosophers, philos);
+	return (free_philos(rules, philos, philos_monitor), NULL);
 }

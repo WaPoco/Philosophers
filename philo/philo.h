@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 12:41:23 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/13 15:54:46 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:06:20 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int				atleat_one_dead(t_philosopher *p);
 void			print_message(t_philosopher *p, char *text);
 
 // monitore
-int				check_and_simulation(t_philosopher *p);
+int				check_end_simulation(t_philosopher *p);
 void			*monitore(void *arg);
 
 // check and read input
@@ -76,7 +76,23 @@ void			init_forks(pthread_mutex_t *forks, int philo_num);
 t_philosopher	*init_philo(int arg0, char **args);
 
 // free
-void			free_all(t_rules *rules, t_philosopher *philos,
+void			free_philos(t_rules *rules, t_philosopher *philos,
 					pthread_t *philos_monitor);
-void			destroy_all(t_rules *rules, t_philosopher *philos,
+void			destroy_all(int n, t_rules *rules, t_philosopher *philos);
+void			free_philos_meals(int i, t_philosopher *philos);
+void			free_philos_eats(int i, t_philosopher *philos);
+void			free_after_eats(int i, t_rules *rules, t_philosopher *philos, 
+					pthread_t *philos_monitor);
+void			free_after_meals(int i, t_rules *rules, t_philosopher *philos, 
+					pthread_t *philos_monitor);
+
+// allocation
+int				alloc_all(t_philosopher *philos, 
+					pthread_t *philos_monitor, t_rules *rules);
+// threads
+int				create_monitors_philos(t_rules *rules, t_philosopher *philos, 
+					pthread_t *philos_monitor, int i);
+int				join_all_threads(t_rules *rules, t_philosopher *philos, 
+					pthread_t *philos_monitor);
+int				create_threads(t_rules *rules, t_philosopher *philos, 
 					pthread_t *philos_monitor);

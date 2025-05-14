@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/13 16:42:38 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/14 16:13:24 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,19 @@ t_rules	*read_input(int arg0, char **args)
 	t_rules		*rules;
 
 	time = malloc(5 * sizeof(int));
-	rules = malloc(sizeof(t_rules));
-	if (!rules || !time)
+	if (!time)
 		return (NULL);
-	i = 1;
+	rules = malloc(sizeof(t_rules));
+	if (!rules)
+		return (free(time), NULL);
+	i = 0;
 	memset(time, -1, 5 * sizeof(int));
-	while (i < arg0)
+	while (++i < arg0)
 	{
 		if (check_number(args[i]) == 1)
 			time[i - 1] = atoi(args[i]);
 		else
 			return (free(time), free(rules), NULL);
-		i++;
 	}
 	rules->number_of_philosophers = time[0];
 	rules->time_to_die = time[1];

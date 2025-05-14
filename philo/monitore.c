@@ -6,19 +6,21 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 19:49:46 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/13 16:44:11 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:53:23 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_and_simulation(t_philosopher *p)
+int	check_end_simulation(t_philosopher *p)
 {
 	int	i;
 	int	sum;
 
 	i = 0;
 	sum = 0;
+	if (p->rules->number_of_times_each_philosopher_must_eat == -1)
+		return (1);
 	while (i < p->rules->number_of_philosophers)
 	{
 		pthread_mutex_lock(p->rules->meal);
@@ -67,7 +69,7 @@ void	*monitore(void *arg)
 	while (!atleat_one_dead(p))
 	{
 		ft_usleep(p, 10);
-		if (!check_and_simulation(p))
+		if (!check_end_simulation(p))
 			break ;
 		if (!check_last_meal(p))
 			break ;
