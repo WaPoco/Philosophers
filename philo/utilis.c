@@ -6,11 +6,11 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:09:41 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/08/13 17:16:19 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/08/13 17:51:18 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 int	atleat_one_dead(t_philosopher *p)
 {

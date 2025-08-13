@@ -6,11 +6,11 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 11:41:40 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/14 18:05:42 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/08/13 17:51:18 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 void	free_after_meals(int i, t_rules *rules, t_philosopher *philos, 
 		pthread_t *philos_monitor)

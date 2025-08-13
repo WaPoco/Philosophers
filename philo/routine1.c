@@ -6,11 +6,11 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:51:03 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/13 16:51:52 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/08/13 17:51:18 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 void	grap_fork(t_philosopher *p, pthread_mutex_t *fork)
 {

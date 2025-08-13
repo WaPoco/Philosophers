@@ -6,11 +6,11 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 16:41:05 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/14 18:07:17 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/08/13 17:51:18 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../include/philo.h"
 
 int	create_monitors_philos(t_rules *rules, t_philosopher *philos, 
 		pthread_t *philos_monitor, int i)

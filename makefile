@@ -13,7 +13,7 @@ SRC = philo/free.c philo/init.c philo/main.c \
 OBJ	= $(SRC:.c=.o)
 
 # Header files
-HEADER = philo.h
+HEADER = include/philo.h
 
 all: $(NAME)
 
