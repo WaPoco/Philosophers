@@ -6,7 +6,7 @@
 /*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 11:09:41 by vpogorel          #+#    #+#             */
-/*   Updated: 2025/05/14 19:00:50 by vpogorel         ###   ########.fr       */
+/*   Updated: 2025/08/13 17:16:19 by vpogorel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ void	destroy_all(int n, t_rules *rules, t_philosopher *philos)
 	{
 		pthread_mutex_destroy(philos[i].meals);
 		pthread_mutex_destroy(&rules->forks[i]);
-		pthread_mutex_destroy(philos[i].lfork);
-		pthread_mutex_destroy(philos[i].rfork);
 		i++;
 	}
 	pthread_mutex_destroy(rules->dead_lock);
