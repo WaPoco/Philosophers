@@ -1,0 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vpogorel <vpogorel@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/26 12:00:36 by vpogorel          #+#    #+#             */
+/*   Updated: 2025/08/13 17:51:18 by vpogorel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/philo.h"
+
+int	check_number(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (arg == NULL)
+		return (0);
+	while (arg[i])
+	{
+		if (arg[i] > '9' || arg[i] < '0')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+t_rules	*read_input(int arg0, char **args)
+{
+	int			i;
+	int			*time;
+	t_rules		*rules;
+
+	time = malloc(5 * sizeof(int));
+	if (!time)
+		return (NULL);
+	rules = malloc(sizeof(t_rules));
+	if (!rules)
+		return (free(time), NULL);
+	i = 0;
+	memset(time, -1, 5 * sizeof(int));
+	while (++i < arg0)
+	{
+		if (check_number(args[i]) == 1)
+			time[i - 1] = atoi(args[i]);
+		else
+			return (free(time), free(rules), NULL);
+	}
+	rules->number_of_philosophers = time[0];
+	rules->time_to_die = time[1];
+	rules->time_to_eat = time[2];
+	rules->time_to_sleep = time[3];
+	rules->number_of_times_each_philosopher_must_eat = time[4];
+	return (free(time), rules);
+}
+
+int	main(int arg0, char **args)
+{
+	if (arg0 == 5 || arg0 == 6)
+		init_philo(arg0, args);
+	else
+		printf("Error arguments");
+	return (0);
+}
