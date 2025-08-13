@@ -4,12 +4,12 @@ CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
 # Name of the library
-NAME = philo
+NAME = philosopher
 
 # Source files and object files
-SRC = free.c init.c main.c \
-			monitore.c routine.c routine1.c \
-			threads.c time.c utilis.c
+SRC = philo/free.c philo/init.c philo/main.c \
+			philo/monitore.c philo/routine.c philo/routine1.c \
+			philo/threads.c philo/time.c philo/utilis.c
 OBJ	= $(SRC:.c=.o)
 
 # Header files
