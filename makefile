@@ -7,9 +7,9 @@ RM = rm -f
 NAME = philosopher
 
 # Source files and object files
-SRC = philo/free.c philo/init.c philo/main.c \
-			philo/monitore.c philo/routine.c philo/routine1.c \
-			philo/threads.c philo/time.c philo/utilis.c
+SRC = src/free.c src/init.c src/main.c \
+			src/monitore.c src/routine.c src/routine1.c \
+			src/threads.c src/time.c src/utilis.c
 OBJ	= $(SRC:.c=.o)
 
 # Header files
