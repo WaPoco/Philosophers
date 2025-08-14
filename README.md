@@ -21,9 +21,7 @@ Without careful design, competing threads can fall into:
 - deadlocks:  All threads wait forever for resources held by others.
 - Racecondition: unpredictable behaviour of variables in common
 
-The philosphers dining problem is used to teach mutex exclusion...
-
-For my implemention I am going to use threads and mutex locks from the library `pthread.h`. Each philosopher will be assigned to a thread and spoon to a mutex lock. 
+This problem is a well-known synchronization challenge in concurrent programming, used to illustrate how multiple threads can share resources safely without conflicts.
 
 ## 📚 Table of Contents
 - [Project Structure](#-project-structure)
