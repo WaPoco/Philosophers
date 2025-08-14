@@ -44,6 +44,29 @@ For my implemention I am going to use threads and mutex locks from the library `
 - [How does it work](#-How-does-it-work)
 - [Requirements](#-requirements)
 
+## 📂 Project Structure
+-src/
+  -free.c – Cleanup and resource deallocation
+
+  -init.c – Initializes data structures, mutexes, and state
+
+  -main.c – Program entry point
+
+  -monitore.c – Monitors philosopher states (e.g., starvation, death)
+
+  -routine.c – Main philosopher loop (think → eat → sleep)
+
+  -routine1.c – Additional/helper routines
+
+  -threads.c – Thread creation, joining, and synchronization
+
+  -time.c – Time utilities (timestamps, delays)
+
+  -utilis.c – General helper functions
+  
+include/
+  -philo.h - Header file with constants, structures, and function prototypes
+
 ## How does it work
 
 1. Resource‐Hierarchy (Numbering) Strategy
