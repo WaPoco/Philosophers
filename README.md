@@ -1,6 +1,6 @@
 ## Philosophers problem
 
-This project is about implementing a solution to the classic philoshers dining problem.
+This project is about implementing a solution to the classic philosphers dining problem.
 We have n philosophers sitting around a circular table.
 Between each pair of philosophers lies a spoon.
 To eat, a philosopher must hold two spoons — one in each hand.
@@ -14,6 +14,12 @@ The key to solving the Dining Philosophers so that no one starves is to ensure t
 - No deadlock (every system of requests eventually makes progress)
 - No starvation (every philosopher who wants to eat eventually gets to eat)
 
+The philosphers follow a routine:
+1.Think
+2.Eating
+3.Sleeping
+4.Repeat 1
+
 ## Solution  
 
 1. Resource‐Hierarchy (Numbering) Strategy
@@ -23,7 +29,10 @@ Always pick up the lower‐numbered spoon first, then the higher‐numbered one.
 Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the left.
 - If i < (i+1)%n he grabs spoon i first;
 - otherwise he grabs spoon (i+1)%n first.
-  
+
+Implementation:
+Each philosopher will be represented through thread a spoon through a mutex lock. 
+
 ## 📚 Table of Contents
 - [Project Structure](#-project-structure)
 - [Installation](#-installation)
