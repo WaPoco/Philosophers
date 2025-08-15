@@ -1,4 +1,5 @@
 ## Philosophers dining problem
+![Philosophers Diagram](0010.jpg)
 
 This project is about implementing a solution to the classic philosphers dining problem.
 We have a few philosophers sitting around a circular table.
