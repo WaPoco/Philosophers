@@ -21,16 +21,16 @@ The philosphers dining problem refers to the classical synchronization problem i
 Without careful design, competing threads can fall into:
 - deadlocks:  All threads wait forever for resources held by others.
 - Racecondition: unpredictable behaviour of variables in common
-
 This problem is a well-known synchronization challenge in concurrent programming, used to illustrate how multiple threads can share resources safely without conflicts.
 
+---
 ## 📚 Table of Contents
 - [Project Structure](#-project-structure)
 - [Installation](#-Installation)
-- [Usage](#-usage)
+- [usage](#-usage)
 - [How does it work](#-How-does-it-work)
 - [Tests](#-Tests)
-
+---
 ## 📂 Project Structure
 ```
 philosophers/
@@ -53,6 +53,7 @@ philosophers/
 └─ picures/
    └─ 0012.jpg
 ```
+---
 ## 🛠️ Installation
 Clone the repo:
 ```bash
@@ -70,7 +71,7 @@ Clean up at the end:
 ```
 make fclean
 ```
-
+---
 ## Usage
 
 ```bash
@@ -110,6 +111,7 @@ Output:
 401 0 is thinking
 401 0 died
 ```
+---
 ## How does it work
 
 1. Resource‐Hierarchy (Numbering) Strategy
@@ -119,3 +121,7 @@ Always pick up the lower‐numbered spoon first, then the higher‐numbered one.
 Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the left.
 - If i < (i+1)%n he grabs spoon i first;
 - otherwise he grabs spoon (i+1)%n first.
+## Tests
+1.Test: No dataraces, deadlocks
+```valgrind --tool=helgrind ./Philosophers ...```
+2.Test: 
