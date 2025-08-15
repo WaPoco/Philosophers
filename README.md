@@ -53,24 +53,62 @@ philosophers/
 └─ picures/
    └─ 0012.jpg
 ```
-## Installation
-Get repo
+## 🛠️ Installation
+Clone the repo:
 ```bash
 git clone https://github.com/WaPoco/Philosophers
 ```
-Change directory
+Change directory:
 ```
 cd Philosophers
 ```
-Create Philosophers binary
+Create the binary:
 ```
 make
+```
+Clean up at the end:
+```
+make fclean
 ```
 
 ## Usage
 
 ```bash
-./Philosophers n t_die t_sleep
+./Philosophers n t_die t_eat t_sleep must_eat
+```
+### Arguments
+- ```n```       number of philosophers and forks
+- ```t_die```   time in ms that past after the last meal. After that duration a philospher will starve to death.
+- ```t_eat```   time in ms that a philosopher needs during eating
+- ```t_sleep``` time in ms that a philosopher needs during sleeping
+- ```must_eat```number of times each philosopher should eat atleast
+
+Output:
+```
+time_past | i-philosopher | state of a philosopher(thinking, eating, grabing or sleeping)
+```
+    
+### Example
+```./Philosophers 5 400 200 200```
+
+Output:
+```
+0 0 is thinking
+0 0 has taken a fork
+0 0 has taken a fork
+0 0 is eating
+0 1 is thinking
+0 1 has taken a fork
+0 2 is thinking
+0 3 is thinking
+200 0 is sleeping
+200 3 has taken a fork
+200 3 has taken a fork
+200 3 is eating
+200 1 has taken a fork
+200 1 is eating
+401 0 is thinking
+401 0 died
 ```
 ## How does it work
 
