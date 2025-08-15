@@ -1,4 +1,4 @@
-## Philosophers dining problem
+## Philosophers
 ![Philosophers Diagram](pictures/0010.jpg)
 
 This project is about implementing a solution to the classic philosphers dining problem.
@@ -27,7 +27,7 @@ This problem is a well-known synchronization challenge in concurrent programming
 ## 📚 Table of Contents
 - [Project Structure](#-project-structure)
 - [Installation](#-Installation)
-- [usage](#-usage)
+- [Usage](#-Usage)
 - [How does it work](#-How-does-it-work)
 - [Tests](#-Tests)
 ---
@@ -124,4 +124,7 @@ Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the l
 ## Tests
 1.Test: No dataraces, deadlocks
 ```valgrind --tool=helgrind ./Philosophers ...```
-2.Test: 
+
+2.Test:
+
+```./Philosophers 1 800 200 200``
