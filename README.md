@@ -1,4 +1,4 @@
-## Philosophers
+# Philosophers
 ![Philosophers Diagram](pictures/0010.jpg)
 
 This project is about implementing a solution to the classic philosphers dining problem.
@@ -127,4 +127,4 @@ Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the l
 
 2.Test:
 
-```./Philosophers 1 800 200 200``
+```./Philosophers 1 800 200 200```
