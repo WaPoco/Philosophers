@@ -16,7 +16,7 @@ The key to solving the Dining Philosophers is to ensure two properties simultane
 
 ### Why this matters
 
-The philosphers dining problem refers to the classical synchronization problem in an operating system. If we have more than one thread or process and shared memory the synchronization problem arises. The philosophers dining problem illustrates the issue when mutiple threads or processes access shared resources in memory without coordination.
+The philosphers dining problem refers to the classical synchronization problem in an operating system and illustrates the issue when mutiple threads or processes access shared resources in memory without coordination.
 
 Without careful design, competing threads can fall into:
 - deadlocks:  All threads wait forever for resources held by others.
@@ -32,27 +32,24 @@ This problem is a well-known synchronization challenge in concurrent programming
 - [Tests](#-Tests)
 
 ## 📂 Project Structure
-src/
-  - free.c – Cleanup and resource deallocation
-
-  - init.c – Initializes data structures, mutexes, and state
-
-  - main.c – Program entry point
-
-  - monitore.c – Monitors philosopher states (e.g., starvation, death)
-
-  - routine.c – Main philosopher loop (think → eat → sleep)
-
-  - routine1.c – Additional/helper routines
-
-  - threads.c – Thread creation, joining, and synchronization
-
-  - time.c – Time utilities (timestamps, delays)
-
-  - utilis.c – General helper functions
-  
-include/
-  -philo.h - Header file with constants, structures, and function prototypes
+```
+philosophers/
+├─ Makefile
+├─ README.md
+├─ include/
+│  └─ philo.h
+├─ src/
+│  ├─ free.c
+│  ├─ init.c              // NEW: argv validation & config
+│  ├─ monitore.c              // alloc/init table, forks, mutexes
+│  ├─ routine.c             // thread create/join, staggered start
+│  ├─ routine1.c           // philosopher loop (think → eat → sleep)
+│  ├─ threads.c           // eat(), sleep_philo(), think()
+│  ├─ time.c              // fork locking policy (order/trylock)
+│  └─ utils.c             // is_digit, atoi_ll, clamp, error()
+└─ tests/
+   └─ scenarios.sh        // quick runs for common/edge cases
+```
 ## Installation
 Get repo
 ```bash
