@@ -39,16 +39,19 @@ philosophers/
 ├─ include/
 │  └─ philo.h
 ├─ src/
-│  ├─ free.c
-│  ├─ init.c              // NEW: argv validation & config
-│  ├─ monitore.c              // alloc/init table, forks, mutexes
-│  ├─ routine.c             // thread create/join, staggered start
-│  ├─ routine1.c           // philosopher loop (think → eat → sleep)
-│  ├─ threads.c           // eat(), sleep_philo(), think()
-│  ├─ time.c              // fork locking policy (order/trylock)
-│  └─ utils.c             // is_digit, atoi_ll, clamp, error()
+│  ├─ free.c               // functions to free memory from heap
+│  ├─ init.c               // allocates and initializes philos, mutex locks and threads
+│  ├─ monitore.c           // monitores all simulation condition(death of philos, starvation) 
+│  ├─ routine1.c           // grap forks
+│  ├─ routine.c            // philosopher loop eat(), sleep_time(), thinking()
+│  ├─ threads.c            // thread create/join
+│  ├─ time.c               // time functions
+│  └─ utils.c              // allocation, destroy, print message
 └─ tests/
    └─ scenarios.sh        // quick runs for common/edge cases
+|
+└─ picures/
+   └─ 0012.jpg
 ```
 ## Installation
 Get repo
