@@ -21,6 +21,7 @@ The philosphers dining problem refers to the classical synchronization problem i
 Without careful design, competing threads can fall into:
 - deadlocks:  All threads wait forever for resources held by others.
 - Racecondition: unpredictable behaviour of variables in common
+
 This problem is a well-known synchronization challenge in concurrent programming, used to illustrate how multiple threads can share resources safely without conflicts.
 
 ---
