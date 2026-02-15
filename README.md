@@ -1,4 +1,7 @@
 # Philosophers
+This project has been created as part of the 42 curriculum by vpogorel. 
+
+# Description
 ![Philosophers Diagram](pictures/0010.jpg)
 
 This project is about implementing a solution to the classic philosphers dining problem.
@@ -24,14 +27,6 @@ Without careful design, competing threads can fall into:
 
 This problem is a well-known synchronization challenge in concurrent programming, used to illustrate how multiple threads can share resources safely without conflicts.
 
----
-## 📚 Table of Contents
-- [Project Structure](#-project-structure)
-- [Installation](#-Installation)
-- [Usage](#-Usage)
-- [How does it work](#-How-does-it-work)
-- [Tests](#-Tests)
----
 ## 📂 Project Structure
 ```
 philosophers/
@@ -53,24 +48,6 @@ philosophers/
 |
 └─ picures/
    └─ 0012.jpg
-```
----
-## 🛠️ Installation
-Clone the repo:
-```bash
-git clone https://github.com/WaPoco/Philosophers
-```
-Change directory:
-```
-cd Philosophers
-```
-Create the binary:
-```
-make
-```
-Clean up at the end:
-```
-make fclean
 ```
 ---
 ## Usage
@@ -129,3 +106,28 @@ Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the l
 2.Test:
 
 ```./Philosophers 1 800 200 200```
+
+# Instructions
+Clone the repo:
+```bash
+git clone https://github.com/WaPoco/Philosophers
+```
+Change directory:
+```
+cd Philosophers
+```
+Create the binary:
+```
+make
+```
+Clean up at the end:
+```
+make fclean
+```
+---
+# Resources
+- [Dining Philosophers Problem - Wikipedia](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
+- [Dining Philosophers Problem - GeeksforGeeks](https://www.geeksforgeeks.org/dining-philosophers-problem/)
+- [Dining Philosophers Problem - YouTube](https://www.youtube.com/watch?v=YtqNQYqJ8o)
+- [Dining Philosophers Problem - StackOverflow](https://stackoverflow.com/questions/1918/dining-philosophers-problem)
+- [Dining Philosophers Problem - 42 Cursus]
