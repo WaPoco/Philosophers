@@ -99,6 +99,8 @@ Always pick up the lower‐numbered spoon first, then the higher‐numbered one.
 Philosopher i sees two spoons: spoon i (on the right) and spoon (i+1)%n on the left.
 - If i < (i+1)%n he grabs spoon i first;
 - otherwise he grabs spoon (i+1)%n first.
+![4 Philosophers ](https://github.com/WaPoco/Philosophers/blob/main/philo-demo.gif)
+
 ## Tests
 1.Test: No dataraces, deadlocks
 ```valgrind --tool=helgrind ./Philosophers ...```
