@@ -92,7 +92,7 @@ Output:
 ---
 ## How does it work
 
-1. Resource‐Hierarchy Strategy
+#### Resource‐Hierarchy Strategy
 
 Number the spoons from 0 through n – 1 (in a circle).
 Each Philosopher sees two spoons: on the right and left side.
