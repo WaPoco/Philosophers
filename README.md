@@ -92,13 +92,15 @@ Output:
 ---
 ## How does it work
 
-1. Resource‐Hierarchy (Numbering) Strategy
+1. Resource‐Hierarchy Strategy
 
 Number the spoons from 0 through n – 1 (in a circle).
 Each Philosopher sees two spoons: on the right and left side.
 Each Philosopher should pick up the right spoon first, then the left spoon.
 If another philosopher is already holding the right or left spoon, he waits until it is available.
+
 In the following animation we have 4 philosophers and 4 spoons. Each philosopher picks up the right spoon first, then the left spoon. If a philosopher is already holding the right or left spoon, he waits until it is available. This strategy prevents deadlock because at least one philosopher will be able to eat and release the spoons, allowing others to eat as well. As a result, first all even numbered philosophers will eat, then all odd numbered philosophers will eat, and so on. This way, no philosopher will starve and the system will make progress. 
+
 ![4 Philosophers ](https://github.com/WaPoco/Philosophers/blob/main/philo-demo.gif)
 
 ## Tests
