@@ -94,15 +94,18 @@ Output:
 
 #### Resource‐Hierarchy Strategy
 
-Number the spoons from 0 through n – 1 (in a circle).
-Each Philosopher sees two spoons: on the right and left side.
+Number the spoons and philosophers from 0 through n – 1 clockwise.
+Each Philosopher can reach two spoons: on the right or left side.
 Each Philosopher should pick up the right spoon first, then the left spoon.
 If another philosopher is already holding the right or left spoon, he waits until it is available.
 
-In the following animation we have 4 philosophers and 4 spoons. Each philosopher picks up the right spoon first, then the left spoon. If a philosopher is already holding the right or left spoon, he waits until it is available. This strategy prevents deadlock because at least one philosopher will be able to eat and release the spoons, allowing others to eat as well. As a result, first all even numbered philosophers will eat, then all odd numbered philosophers will eat, and so on. This way, no philosopher will starve and the system will make progress. 
+In the following animation we have 4 philosophers and 4 spoons. Each philosopher picks up the right spoon first, then the left spoon. If a philosopher is already holding the right or left spoon, he waits until it is available. This strategy prevents in many cases deadlocks because at least one philosopher will be able to eat and release the spoons, allowing others to eat as well. As a result, first all even numbered philosophers will eat, then all odd numbered philosophers will eat, and so on. This way, no philosopher will starve and the system will make progress. 
 
 ![4 Philosophers ](https://github.com/WaPoco/Philosophers/blob/main/philo-demo.gif)
 
+One possible way to implement the solution is by using mutexes and threads from the library ```thread.h```. 
+A thread is the smallest execution unit which the CPU can process and would represent a philosopher.
+On the other hand the spoons could be represented by mutexes which are kind of locks. ...
 ## Tests
 1.Test: No dataraces, deadlocks
 ```valgrind --tool=helgrind ./Philosophers ...```
