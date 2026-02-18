@@ -105,7 +105,7 @@ In the following animation we have 4 philosophers and 4 spoons. Each philosopher
 
 One possible way to implement the solution is by using mutexes and threads from the library ```thread.h```. 
 A thread is the smallest execution unit which the CPU can process and would represent a philosopher.
-On the other hand the spoons could be represented by mutexes which are kind of locks. ...
+On the other hand the spoons could be represented by mutexes which are kind of locks. ....
 ## Tests
 1.Test: No dataraces, deadlocks
 ```valgrind --tool=helgrind ./Philosophers ...```
