@@ -2,7 +2,7 @@
 This project has been created as part of the 42 curriculum by vpogorel. 
 
 # Description
-![Philosophers Diagram](pictures/0010.jpg)
+![Philosophers Diagram](pictures/setting.jpg)
 
 This project is about implementing a solution to the classic philosphers dining problem.
 We have a few philosophers sitting around a circular table.
