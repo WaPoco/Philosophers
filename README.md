@@ -96,6 +96,8 @@ Output:
 
 Number the spoons and philosophers from 0 through n – 1 clockwise.
 Each Philosopher can reach two spoons: on the right or left side.
+
+#### How do I prevent deadlocks?
 In order to avoid deadlocks each philosopher should grap opposite forks. 
 
 A even numbered Philosopher should pick up the left spoon first, then the right spoon.
@@ -108,6 +110,11 @@ If the number of philosopher is odd, then result will be two groups of philosoph
 In the following animation you will see 4 philosophers.
 
 ![4 Philosophers ](https://github.com/WaPoco/Philosophers/blob/main/philo-demo.gif)
+ ##### How do I prevent starvation?
+
+ ```if n even : t_die > t_eat + t_sleep + 10ms```, then all philosphers will survive.
+ ```if n odd : t_die > 2*(t_eat + t_sleep) + 10ms```, then all philosphers will survive.
+ 
 
 #### How did I implement the strategy ?
 One possible way to implement the solution is by using mutexes and threads from the library ```thread.h```.
@@ -116,17 +123,23 @@ A thread is the smallest execution unit which the CPU can process and would repr
 On the other hand the spoons could be represented by mutexes which are kind of locks. When a philosopher graps a
 fork no one can get access to the same object.
 ```
+void	grap_fork(t_philosopher *p, pthread_mutex_t *fork)
+{
+	pthread_mutex_lock(fork);
+	print_message(p, "has taken a fork");
+}
+
 void	grap_forks(t_philosopher *p)
 {
 	if (p->id % 2 == 0)
 	{
-		grap_fork(p, p->rfork);
 		grap_fork(p, p->lfork);
+		grap_fork(p, p->rfork);
 	}
 	else
 	{
-		grap_fork(p, p->lfork);
 		grap_fork(p, p->rfork);
+		grap_fork(p, p->lfork);
 	}
 }
 ```
