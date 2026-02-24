@@ -113,6 +113,7 @@ In the following animation you will see 4 philosophers.
  ##### How do I prevent starvation?
 
  ```if n even : t_die > t_eat + t_sleep + 10ms```, then all philosphers will survive.
+ 
  ```if n odd : t_die > 2*(t_eat + t_sleep) + 10ms```, then all philosphers will survive.
  
 
