@@ -97,6 +97,7 @@ Output:
 Number the spoons and philosophers from 0 through n – 1 clockwise.
 Each Philosopher can reach two spoons: on the right or left side.
 In order to avoid deadlocks each philosopher should grap opposite forks. 
+
 A even numbered Philosopher should pick up the left spoon first, then the right spoon.
 A odd numbered Philosopher should pick up the right speen first, then the left spoon.
 If another philosopher is already holding the right or left spoon, he waits until it is available.
@@ -108,11 +109,28 @@ In the following animation you will see 4 philosophers.
 
 ![4 Philosophers ](https://github.com/WaPoco/Philosophers/blob/main/philo-demo.gif)
 
-#### How did I implemented the strategy ?
-One possible way to implement the solution is by using mutexes and threads from the library ```thread.h```. 
+#### How did I implement the strategy ?
+One possible way to implement the solution is by using mutexes and threads from the library ```thread.h```.
+
 A thread is the smallest execution unit which the CPU can process and would represent a philosopher.
 On the other hand the spoons could be represented by mutexes which are kind of locks. When a philosopher graps a
-fork no one can get access the same object. 
+fork no one can get access to the same object.
+```
+void	grap_forks(t_philosopher *p)
+{
+	if (p->id % 2 == 0)
+	{
+		grap_fork(p, p->rfork);
+		grap_fork(p, p->lfork);
+	}
+	else
+	{
+		grap_fork(p, p->lfork);
+		grap_fork(p, p->rfork);
+	}
+}
+```
+
 ## Tests
 1.Test: No dataraces, deadlocks
 ```valgrind --tool=helgrind ./Philosophers ...```
