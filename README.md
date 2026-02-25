@@ -114,7 +114,7 @@ In the following animation you will see 4 philosophers.
 
  ```if n even : t_die > 2*t_eat + t_sleep```, then all philosphers will survive.
  
- ```if n odd : t_die > 4*t_eat + t_sleep```, then all philosphers will survive.
+ ```if n odd : t_die > 3*t_eat + t_sleep```, then all philosphers will survive.
  But the limits can depend on the Mutex locking, print delays, CPU scheduling and context switches. The limits could be even higher( specially if the number of philosopher get more than 20).
  
 
