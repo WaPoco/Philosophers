@@ -165,12 +165,7 @@ void	*routine(void *arg)
 ```
 
 ## Tests
-1.Test: No dataraces, deadlocks
-```valgrind --tool=helgrind ./Philosophers ...```
-
-2.Test:
-
-```./Philosophers 1 800 200 200```
+![Tests](https://github.com/WaPoco/Philosophers/blob/main/tests.png)
 
 # Instructions
 Clone the repo:
