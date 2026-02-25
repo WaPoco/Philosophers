@@ -113,9 +113,14 @@ In the following animation you will see 4 philosophers.
  ##### How do I prevent starvation?
 
  ```if n even : t_die > 2*t_eat + t_sleep```, then all philosphers will survive.
+For this limit we assume that the a philosopher will have to wait at most one time for the spoon, then he will eat and sleep. So the time that a philosopher will wait is at most ```2*t_eat + t_sleep```. 
  
  ```if n odd : t_die > 3*t_eat + t_sleep```, then all philosphers will survive.
- But the limits can depend on the Mutex locking, print delays, CPU scheduling and context switches. The limits could be even higher( specially if the number of philosopher get more than 20).
+For this limit we assume that a philosopher will have to wait at most two times for the spoon, then he will eat and sleep. So the time that a philosopher will wait is at most ```3*t_eat + t_sleep```.
+
+One another limit for both cases could be ```t_die > 4 * t_eat + t_sleep```.
+
+But the limits can depend on the mutex locking, print delays, CPU scheduling and context switches. The limits could is probably higher than the ones mentioned above and we should add some margin to be sure that all philosphers will survive.
  
 
 #### How did I implement the strategy ?
