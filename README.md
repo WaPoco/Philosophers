@@ -142,7 +142,8 @@ void	grap_forks(t_philosopher *p)
 		grap_fork(p, p->rfork);
 		grap_fork(p, p->lfork);
 	}
-}```
+}
+```
 
 ## Tests
 1.Test: No dataraces, deadlocks
