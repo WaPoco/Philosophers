@@ -150,7 +150,7 @@ void	grap_forks(t_philosopher *p)
 	}
 }
 ```
-Another way to improve the timing is to let some philosphers wait and bring them into position.
+Another way to improve timing is to delay some philosophers at the start so they begin in a better position.
 ```
 void	*routine(void *arg)
 {
