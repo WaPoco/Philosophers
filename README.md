@@ -150,6 +150,19 @@ void	grap_forks(t_philosopher *p)
 	}
 }
 ```
+Another way to improve the timing is to let some philosphers wait and bring them into position.
+```
+void	*routine(void *arg)
+{
+	t_philosopher	*p;
+
+	...
+	if (p->id % 2 != 0)
+		ft_usleep(p, 100);
+	...
+	return (NULL);
+}
+```
 
 ## Tests
 1.Test: No dataraces, deadlocks
