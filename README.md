@@ -190,4 +190,4 @@ make fclean
 - [Dining Philosophers Problem - GeeksforGeeks](https://www.geeksforgeeks.org/dining-philosophers-problem/)
 - [Dining Philosophers Problem - YouTube](https://www.youtube.com/watch?v=YtqNQYqJ8o)
 - [Dining Philosophers Problem - StackOverflow](https://stackoverflow.com/questions/1918/dining-philosophers-problem)
-- [Dining Philosophers Problem - 42 Cursus]
+- [[Dining Philosophers Problem - 42 Cursus]](https://rom98759.github.io/Philosophers-visualizer/)
