@@ -27,69 +27,6 @@ Without careful design, competing threads can fall into:
 
 This problem is a well-known synchronization challenge in concurrent programming, used to illustrate how multiple threads can share resources safely without conflicts.
 
-## 📂 Project Structure
-```
-philosophers/
-├─ Makefile
-├─ README.md
-├─ include/
-│  └─ philo.h
-├─ src/
-│  ├─ free.c               // functions to free memory from heap
-│  ├─ init.c               // allocates and initializes philos, mutex locks and threads
-│  ├─ monitore.c           // monitores all simulation condition(death of philos, starvation) 
-│  ├─ routine1.c           // grap forks
-│  ├─ routine.c            // philosopher loop eat(), sleep_time(), thinking()
-│  ├─ threads.c            // thread create/join
-│  ├─ time.c               // time functions
-│  └─ utils.c              // allocation, destroy, print message
-└─ tests/
-   └─ scenarios.sh        // quick runs for common/edge cases
-|
-└─ picures/
-   └─ 0012.jpg
-```
----
-## Usage
-
-```bash
-./Philosophers n t_die t_eat t_sleep must_eat
-```
-### Arguments
-- ```n```       number of philosophers and forks
-- ```t_die```   time in ms that past after the last meal. After that duration a philospher will starve to death.
-- ```t_eat```   time in ms that a philosopher needs during eating
-- ```t_sleep``` time in ms that a philosopher needs during sleeping
-- ```must_eat```number of times each philosopher should eat atleast
-
-Output:
-```
-time_past | i-philosopher | state of a philosopher(thinking, eating, grabing or sleeping)
-```
-    
-### Example
-```./Philosophers 5 400 200 200```
-
-Output:
-```
-0 0 is thinking
-0 0 has taken a fork
-0 0 has taken a fork
-0 0 is eating
-0 1 is thinking
-0 1 has taken a fork
-0 2 is thinking
-0 3 is thinking
-200 0 is sleeping
-200 3 has taken a fork
-200 3 has taken a fork
-200 3 is eating
-200 1 has taken a fork
-200 1 is eating
-401 0 is thinking
-401 0 died
-```
----
 ## How does it work
 
 #### Resource‐Hierarchy Strategy
@@ -163,10 +100,73 @@ void	*routine(void *arg)
 	return (NULL);
 }
 ```
+## 📂 Project Structure
+```
+philosophers/
+├─ Makefile
+├─ README.md
+├─ include/
+│  └─ philo.h
+├─ src/
+│  ├─ free.c               // functions to free memory from heap
+│  ├─ init.c               // allocates and initializes philos, mutex locks and threads
+│  ├─ monitore.c           // monitores all simulation condition(death of philos, starvation) 
+│  ├─ routine1.c           // grap forks
+│  ├─ routine.c            // philosopher loop eat(), sleep_time(), thinking()
+│  ├─ threads.c            // thread create/join
+│  ├─ time.c               // time functions
+│  └─ utils.c              // allocation, destroy, print message
+└─ tests/
+   └─ scenarios.sh        // quick runs for common/edge cases
+|
+└─ picures/
+   └─ 0012.jpg
+```
+---
+## Usage
+
+```bash
+./Philosophers n t_die t_eat t_sleep must_eat
+```
+### Arguments
+- ```n```       number of philosophers and forks
+- ```t_die```   time in ms that past after the last meal. After that duration a philospher will starve to death.
+- ```t_eat```   time in ms that a philosopher needs during eating
+- ```t_sleep``` time in ms that a philosopher needs during sleeping
+- ```must_eat```number of times each philosopher should eat atleast
+
+Output:
+```
+time_past | i-philosopher | state of a philosopher(thinking, eating, grabing or sleeping)
+```
+    
+### Example
+```./Philosophers 5 400 200 200```
+
+Output:
+```
+0 0 is thinking
+0 0 has taken a fork
+0 0 has taken a fork
+0 0 is eating
+0 1 is thinking
+0 1 has taken a fork
+0 2 is thinking
+0 3 is thinking
+200 0 is sleeping
+200 3 has taken a fork
+200 3 has taken a fork
+200 3 is eating
+200 1 has taken a fork
+200 1 is eating
+401 0 is thinking
+401 0 died
+```
+---
 
 ## Tests
 ![Tests](https://github.com/WaPoco/Philosophers/blob/main/tests.png)
-
+We had to test with valgrind tool=helgrind for dataraces and deadlocks.
 # Instructions
 Clone the repo:
 ```bash
